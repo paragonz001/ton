@@ -234,9 +234,9 @@ export class TonClient {
     async sendMessage(src: Message) {
         const boc = beginCell()
             .store(storeMessage(src))
-            .endCell()
-            .toBoc();
-        await this.api.sendBoc(boc);
+            .endCell();
+        await this.api.sendBoc(boc.toBoc());
+        return boc.hash().toString('hex');
     }
 
     /**
@@ -272,14 +272,14 @@ export class TonClient {
                 to: contract.address,
                 body: src
             });
-            await this.sendMessage(message);
+            return await this.sendMessage(message);
         } else {
             const message = external({
                 to: contract.address,
                 init: contract.init,
                 body: src
             });
-            await this.sendMessage(message);
+            return await this.sendMessage(message);
         }
     }
 
